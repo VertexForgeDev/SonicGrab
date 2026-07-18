@@ -1,13 +1,16 @@
-{
-  "name": "sonicgrab",
-  "version": "1.0.0",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "express": "^4.18.2",
-    "youtube-dl-exec": "^2.5.12"
-  }
-}
-```eof
+// ... existing code ...
+const ffmpegPath = require('ffmpeg-static');
+
+// ... existing code ...
+
+app.post('/convert', async (req, res) => {
+    // ... existing code ...
+    try {
+        await ytdl(url, {
+            extractAudio: true,
+            audioFormat: 'mp3',
+            ffmpegLocation: ffmpegPath, // ADD THIS LINE
+            // ... existing code ...
+        });
+    // ... existing code ...
+});
