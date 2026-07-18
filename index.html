@@ -123,6 +123,7 @@
     </footer>
 
     <script>
+        const API_BASE = 'https://YOUR-RAILWAY-URL.up.railway.app'; // <--- REPLACE WITH YOUR RAILWAY URL
         const inputForm = document.getElementById('inputForm');
         const urlInput = document.getElementById('urlInput');
         const convertBtn = document.getElementById('convertBtn');
@@ -147,7 +148,7 @@
             processingState.classList.remove('hidden');
 
             try {
-                const response = await fetch('/convert', {
+                const response = await fetch(`${API_BASE}/convert`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ url })
@@ -173,7 +174,7 @@
         // Trigger file streaming download
         downloadBtn.addEventListener('click', () => {
             if (downloadUrl) {
-                window.location.href = downloadUrl;
+                window.location.href = API_BASE + downloadUrl;
             }
         });
 
