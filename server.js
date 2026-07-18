@@ -1,75 +1,121 @@
-// Basic Express server to handle requests
-const express = require('express');
+onst express = require('express');
 const ytdl = require('youtube-dl-exec');
+const fs = require('fs');
 const path = require('path');
 const app = express();
 
 app.use(express.static('public'));
 app.use(express.json());
 
+// Ensure the local download directory exists securely
+const downloadDir = path.join(__dirname, 'downloads');
+if (!fs.existsSync(downloadDir)) {
+    fs.mkdirSync(downloadDir, { recursive: true });
+}
+
 app.post('/convert', async (req, res) => {
     const { url } = req.body;
+    
+    // Validate request inputs
+    if (!url || !url.includes('youtube.com') && !url.includes('youtu.be')) {
+        return res.status(400).json({ success: false, error: "Please provide a valid YouTube URL." });
+    }
+
+    // Generate a unique transaction ID for this download task
+    const id = Date.now().toString();
+    console.log(`[PROCESS] Initiating extraction id ${id} for URL: ${url}`);
+
     try {
-        // This command extracts the best audio and converts to mp3
-        const output = await ytdl(url, {
+        // We output using the format: id_%(title)s.%(ext)s to dynamically catch the title
+        await ytdl(url, {
             extractAudio: true,
             audioFormat: 'mp3',
-            audioQuality: '0', // 0 is best quality
-            output: 'downloads/%(title)s.%(ext)s'
+            audioQuality: '0', // Highest quality possible
+            output: path.join(downloadDir, `${id}_%(title)s.%(ext)s`),
+            noPlaylist: true,
         });
-        
-        // In a real-world scenario, you would return the file path or a download stream
-        res.json({ success: true, message: "Conversion started" });
+
+        const files = fs.readdirSync(downloadDir);
+        const targetFile = files.find(f => f.startsWith(`${id}_`));
+
+        if (!targetFile) {
+            throw new Error("Conversion finished but output file was not found.");
+        }
+
+        // Clean file names to look standard
+        const rawTitle = targetFile.substring(id.length + 1).replace('.mp3', '');
+        console.log(`[SUCCESS] Extracted sound file: "${rawTitle}"`);
+
+        res.json({ 
+            success: true, 
+            downloadUrl: `/download/${id}`, 
+            title: rawTitle 
+        });
+
     } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+        console.error(`[FAILURE] Extraction failed on item ${id}:`, error.message);
+        res.status(500).json({ 
+            success: false, 
+            error: "Audio extraction failed. Verify that FFmpeg is installed and the video is public." 
+        });
     }
 });
 
-app.listen(3000, () => console.log('SonicGrab server running on http://localhost:3000'));
-```eof
+app.get('/download/:id', (req, res) => {
+    const { id } = req.params;
+    
+    try {
+        const files = fs.readdirSync(downloadDir);
+        const targetFile = files.find(f => f.startsWith(`${id}_`));
 
-#### 2. Updated Client Logic (`public/index.html`)
-You need to update your JavaScript in `index.html` to communicate with the server you just created.
+        if (!targetFile) {
+            return res.status(404).send('Error: This download has expired or does not exist.');
+        }
 
-```html:index.html
-<!-- ... existing code ... -->
-    <script>
-        const btn = document.getElementById('convertBtn');
-        const input = document.getElementById('urlInput');
+        const filePath = path.join(downloadDir, targetFile);
+        const cleanDownloadName = `${targetFile.substring(id.length + 1)}`;
 
-        btn.addEventListener('click', async () => {
-            const url = input.value;
-            if (!url) return;
-
-            btn.innerText = 'Processing...';
-            btn.disabled = true;
-            btn.classList.add('opacity-50');
-
+        // Stream the download to the client
+        res.download(filePath, cleanDownloadName, (err) => {
+            if (err) {
+                console.error(`[ERROR] Transmission interrupted on ${id}:`, err);
+            }
+            
+            // Delete the file after transmission to maintain empty server memory space
             try {
-                const response = await fetch('/convert', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ url })
-                });
-                const data = await response.json();
-                
-                if (data.success) {
-                    btn.innerText = 'Download Ready';
-                } else {
-                    btn.innerText = 'Error: Try again';
-                }
-            } catch (err) {
-                btn.innerText = 'Server Error';
+                fs.unlinkSync(filePath);
+                console.log(`[CLEANUP] Automatically pruned disk file: ${targetFile}`);
+            } catch (unlinkErr) {
+                console.error(`[CLEANUP ERROR] Failed to clean file:`, unlinkErr);
             }
         });
-    </script>
-</body>
-</html>
-```eof
+    } catch (err) {
+        res.status(500).send('Server Error handling file delivery.');
+    }
+});
 
-### Important Technical Requirements for your GitHub:
-*   **Dependencies:** You must run `npm init -y`, `npm install express youtube-dl-exec`, and ensure **`FFmpeg`** is installed on the machine/server where you run this, as `yt-dlp` relies on it for the MP3 conversion.
-*   **Legal/Hosting Warning:** As per the research results, hosting this on public platforms (like Vercel or Netlify) will likely result in your project being taken down for violating YouTube's Terms of Service and copyright policies. Most developers hosting these tools use private VPS (Virtual Private Servers) like DigitalOcean, Linode, or Hetzner.
-*   **Maintenance:** YouTube frequently updates its internal systems to block these tools. You will need to keep your `yt-dlp` version constantly updated to ensure your site doesn't stop working.
+// Cleans up any abandoned downloads older than 15 minutes every 10 minutes
+setInterval(() => {
+    fs.readdir(downloadDir, (err, files) => {
+        if (err) return;
+        const now = Date.now();
+        files.forEach(file => {
+            const filePath = path.join(downloadDir, file);
+            fs.stat(filePath, (err, stats) => {
+                if (err) return;
+                if (now - stats.mtimeMs > 900000) { // 15 Minutes
+                    fs.unlink(filePath, () => {
+                        console.log(`[CRON CLEANUP] Removed idle file: ${file}`);
+                    });
+                }
+            });
+        });
+    });
+}, 600000);
 
-**Recommendation:** Before pushing to GitHub, ensure you include a `README.md` file that clearly states the tool is for educational purposes or for downloading content where the user has explicit permission. This is standard practice for open-source projects involving media extraction.
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`\n=================================================`);
+    console.log(`  SonicGrab System Operational on Port : ${PORT}`);
+    console.log(`=================================================\n`);
+});
