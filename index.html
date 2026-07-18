@@ -7,13 +7,10 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-ZLH78P4Y00');
     </script>
-    
     <!-- FAVICON (The "Sonic Hook") -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%234f46e5%22/><path d=%22M30 50 Q50 20 70 50 T30 80%22 stroke=%22white%22 stroke-width=%228%22 fill=%22none%22 stroke-linecap=%22round%22/></svg>">
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SonicGrab | High-Quality YouTube to MP3 Converter</title>
@@ -26,34 +23,20 @@
     </style>
 </head>
 <body class="bg-slate-950 text-slate-200 min-h-screen">
-
     <nav class="max-w-4xl mx-auto p-6 flex justify-between items-center">
         <a href="#" class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">SonicGrab</a>
     </nav>
-
     <main class="max-w-4xl mx-auto px-6 pb-20">
         <section class="glass p-8 md:p-12 rounded-[2rem] border border-slate-800 shadow-2xl mb-16">
             <h1 class="text-3xl md:text-5xl font-extrabold text-white mb-4">YouTube to MP3 Converter</h1>
             <p class="text-slate-400 mb-8">Convert YouTube videos to high-quality 320kbps MP3 files instantly. No registration, no intrusive ads.</p>
-            
             <div id="converterBox" class="flex flex-col gap-4">
-                <!-- State 1: Ready to Convert -->
                 <div id="inputForm" class="flex flex-col gap-4">
-                    <input 
-                        type="text" 
-                        id="urlInput"
-                        placeholder="Paste YouTube video URL here..." 
-                        class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 focus:outline-none focus:border-indigo-500 transition-all text-lg text-white placeholder-slate-500"
-                    >
-                    <button 
-                        id="convertBtn"
-                        class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-4 rounded-2xl transition-all shadow-lg text-lg flex items-center justify-center gap-2"
-                    >
+                    <input type="text" id="urlInput" placeholder="Paste YouTube video URL here..." class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 focus:outline-none focus:border-indigo-500 transition-all text-lg text-white placeholder-slate-500">
+                    <button id="convertBtn" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-4 rounded-2xl transition-all shadow-lg text-lg flex items-center justify-center gap-2">
                         Start Conversion
                     </button>
                 </div>
-
-                <!-- State 2: Processing state markup -->
                 <div id="processingState" class="hidden flex flex-col items-center justify-center py-6 gap-4 text-center">
                     <div class="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
                     <div>
@@ -61,8 +44,6 @@
                         <p class="text-xs text-slate-500 mt-1">This takes about 15-30 seconds depending on video length.</p>
                     </div>
                 </div>
-
-                <!-- State 3: Download Complete Dynamic Card -->
                 <div id="successCard" class="hidden bg-slate-900/80 border border-emerald-500/20 p-6 rounded-2xl flex flex-col gap-4">
                     <div class="flex items-start gap-4">
                         <div class="p-3 bg-emerald-500/10 rounded-xl text-emerald-400">
@@ -74,7 +55,6 @@
                             <p class="text-xs text-slate-400 mt-0.5">Bitrate: 320 kbps (High Fidelity)</p>
                         </div>
                     </div>
-                    
                     <div class="flex flex-col sm:flex-row gap-3 mt-2">
                         <button id="downloadBtn" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all text-center flex items-center justify-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
@@ -85,45 +65,25 @@
                         </button>
                     </div>
                 </div>
-
-                <!-- Error Warning Banner -->
                 <div id="errorBanner" class="hidden bg-red-950/40 border border-red-500/30 p-4 rounded-xl text-red-300 text-sm flex gap-3 items-center">
                     <svg class="w-5 h-5 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                     <span id="errorText">An error occurred during conversion.</span>
                 </div>
             </div>
         </section>
-
         <section class="space-y-12">
             <div>
                 <h2 class="text-2xl font-semibold text-white mb-4">Fast and Ad-Free Audio Extraction</h2>
-                <p class="leading-relaxed text-slate-400">
-                    SonicGrab provides one of the fastest ways to convert videos to high-fidelity audio. Our systems are optimized to deliver your MP3 in under 30 seconds. With a maximum limit of 90 minutes per video, we ensure stable performance for all users, whether you are grabbing a quick music track, an audiobook, or a long-form podcast.
-                </p>
-            </div>
-
-            <div>
-                <h2 class="text-2xl font-semibold text-white mb-4">How to convert YouTube to MP3</h2>
-                <ol class="space-y-4 text-slate-400 list-decimal list-inside">
-                    <li><strong class="text-slate-200">Search for a video:</strong> Simply find your video on YouTube or the YouTube app and copy the link.</li>
-                    <li><strong class="text-slate-200">Paste the URL:</strong> Enter the link into the converter field above and hit "Convert."</li>
-                    <li><strong class="text-slate-200">Download:</strong> Once the process finishes, a download button will appear. Save your 320kbps MP3 directly to your device.</li>
-                </ol>
-            </div>
-
-            <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-800">
-                <h3 class="font-semibold text-white mb-2">Support Our Project</h3>
-                <p class="text-sm text-slate-400">SonicGrab remains free of intrusive advertising to ensure a premium user experience. If you find our service helpful, please consider a small donation to help us keep the servers running.</p>
+                <p class="leading-relaxed text-slate-400">SonicGrab provides one of the fastest ways to convert videos to high-fidelity audio. Our systems are optimized to deliver your MP3 in under 30 seconds.</p>
             </div>
         </section>
     </main>
-
     <footer class="text-center p-8 text-slate-600 text-sm border-t border-slate-900">
         <p>&copy; 2026 SonicGrab. By using this service, you agree to our terms of use.</p>
     </footer>
-
     <script>
-        const API_BASE = 'https://YOUR-RAILWAY-URL.up.railway.app'; // <--- REPLACE WITH YOUR RAILWAY URL
+        // REPLACE THIS URL WITH YOUR ACTUAL PERSISTENT BACKEND URL (e.g., from Render/Railway)
+        const API_BASE = 'https://YOUR-BACKEND-URL-HERE'; 
         const inputForm = document.getElementById('inputForm');
         const urlInput = document.getElementById('urlInput');
         const convertBtn = document.getElementById('convertBtn');
@@ -137,64 +97,41 @@
 
         let downloadUrl = '';
 
-        // Trigger conversion process
         convertBtn.addEventListener('click', async () => {
             const url = urlInput.value.trim();
             if (!url) return;
-
-            // Shift layout states
             errorBanner.classList.add('hidden');
             inputForm.classList.add('hidden');
             processingState.classList.remove('hidden');
-
             try {
                 const response = await fetch(`${API_BASE}/convert`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ url })
                 });
-                
                 const data = await response.json();
-                
                 if (data.success) {
                     downloadUrl = data.downloadUrl;
                     videoTitle.textContent = data.title;
-                    
-                    // Display success state card
                     processingState.classList.add('hidden');
                     successCard.classList.remove('hidden');
                 } else {
-                    showError(data.error || 'The video conversion could not be resolved.');
+                    throw new Error(data.error);
                 }
             } catch (err) {
-                showError('Could not reach the server. Make sure your server process is active.');
+                errorText.textContent = "Conversion failed. Verify your server is online.";
+                errorBanner.classList.remove('hidden');
+                processingState.classList.add('hidden');
+                inputForm.classList.remove('hidden');
             }
         });
-
-        // Trigger file streaming download
         downloadBtn.addEventListener('click', () => {
-            if (downloadUrl) {
-                window.location.href = API_BASE + downloadUrl;
-            }
+            if (downloadUrl) window.location.href = API_BASE + downloadUrl;
         });
-
-        // Reset system to convert another video
-        resetBtn.addEventListener('click', resetUI);
-
-        function showError(message) {
-            errorText.textContent = message;
-            errorBanner.classList.remove('hidden');
-            processingState.classList.add('hidden');
-            inputForm.classList.remove('hidden');
-        }
-
-        function resetUI() {
-            urlInput.value = '';
-            downloadUrl = '';
+        resetBtn.onclick = () => {
             successCard.classList.add('hidden');
-            errorBanner.classList.add('hidden');
             inputForm.classList.remove('hidden');
-        }
+        };
     </script>
 </body>
 </html>
