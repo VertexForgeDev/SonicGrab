@@ -1,0 +1,79 @@
+{
+  "name": "sonic-grab",
+  "version": "1.0.0",
+  "description": "YouTube to MP3 converter",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "youtube-dl-exec": "^2.4.15"
+  }
+}
+```eof
+
+### 2. `server.js` (Optimized for Deployment)
+I have updated this to be more compatible with cloud environments. **Note:** On most free hosting platforms, you cannot "save" files to the local folder (like a `downloads` folder) because the server disk is temporary. This version pipes the audio stream directly to the user.
+
+```javascript:server.js
+const express = require('express');
+const ytdl = require('youtube-dl-exec');
+const app = express();
+const path = require('path');
+
+app.use(express.static('public'));
+app.use(express.json());
+
+app.post('/convert', async (req, res) => {
+    const { url } = req.url;
+    
+    // Validate URL
+    if (!url) return res.status(400).json({ error: "No URL provided" });
+
+    try {
+        console.log(`Processing: ${url}`);
+        
+        // This streams the audio directly.
+        // Note: yt-dlp must be installed on the server environment.
+        const output = await ytdl(url, {
+            extractAudio: true,
+            audioFormat: 'mp3',
+            audioQuality: '0',
+            output: '-' // Output to stdout for streaming
+        }, { stdio: ['ignore', 'pipe', 'ignore'] });
+
+        res.setHeader('Content-Type', 'audio/mpeg');
+        res.setHeader('Content-Disposition', 'attachment; filename="audio.mp3"');
+        
+        // Pipe the process stdout to the response
+        output.pipe(res);
+        
+    } catch (error) {
+        console.error("Conversion error:", error);
+        res.status(500).json({ error: "Conversion failed. Ensure FFmpeg is installed." });
+    }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`SonicGrab running on port ${PORT}`));
+```eof
+
+### Crucial Steps for your Repository:
+1.  **Create these files:** Put `package.json` and `server.js` in your root folder. Put your `index.html` inside a folder named `public`.
+2.  **GitHub Push:** Push these files to your `VertexForgeDev/SonicGrab` repository.
+3.  **Deployment:** 
+    *   Go to **[Render.com](https://render.com/)**.
+    *   Click **"New"** -> **"Web Service"**.
+    *   Connect your GitHub repository.
+    *   Set the "Build Command" to `npm install`.
+    *   Set the "Start Command" to `node server.js`.
+4.  **The "FFmpeg" problem:** Most free cloud hosts (like Render) do not have `FFmpeg` pre-installed. You will likely need to use a **Docker Container** or a platform that supports build-packs to include FFmpeg. 
+
+**If you try to run this locally on your own computer first:**
+1. Open your terminal in the project folder.
+2. Type `npm install`.
+3. Type `node server.js`.
+4. Go to `http://localhost:3000` in your browser. 
+
+If it works locally but fails on GitHub/Render, it is because your host is missing `FFmpeg`. **This is the biggest hurdle for every developer building these tools!**
