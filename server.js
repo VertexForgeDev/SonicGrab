@@ -68,7 +68,3 @@ app.get('/download/:id', (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`SonicGrab active on port ${PORT}`));
 ```eof
-
-### Why this fixes the `405` error:
-1.  **Middleware order:** `app.use(express.json())` is now strictly defined before the route, ensuring the server can read your JSON request.
-2.  **Request Logging:** When you run this, look at your terminal. If you see `[DEBUG] Received POST request to /convert`, the connection is working. If you *don't* see that, your `index.html` is sending the request to the wrong place.
