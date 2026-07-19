@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "api/convert.mjs": {
-      "runtime": "vercel-node@latest"
-    }
-  }
-}
