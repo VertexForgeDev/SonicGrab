@@ -29,7 +29,7 @@
     <main class="max-w-4xl mx-auto px-6 pb-20">
         <section class="glass p-8 md:p-12 rounded-[2rem] border border-slate-800 shadow-2xl mb-16">
             <h1 class="text-3xl md:text-5xl font-extrabold text-white mb-4">YouTube to MP3 Converter</h1>
-            <p class="text-slate-400 mb-8">Convert YouTube videos to high-quality MP3 files instantly. No registration, no intrusive ads.</p>
+            <p class="text-slate-400 mb-8">Convert YouTube videos to high-quality 320kbps MP3 files instantly. No registration, no intrusive ads.</p>
             
             <div id="converterBox" class="flex flex-col gap-4">
                 <!-- Input Form -->
@@ -58,7 +58,7 @@
                         <div class="flex-1 min-w-0">
                             <h3 class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Conversion Successful</h3>
                             <p id="videoTitle" class="text-lg font-bold text-white truncate mt-1">Video Title Placeholder</p>
-                            <p class="text-xs text-slate-400 mt-0.5">Format: MP3 (High Quality)</p>
+                            <p class="text-xs text-slate-400 mt-0.5">Bitrate: 320 kbps (High Fidelity)</p>
                         </div>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-3 mt-2">
@@ -121,6 +121,7 @@
                     body: JSON.stringify({ url })
                 });
                 
+                // Read text first to handle potential non-JSON error pages
                 const text = await response.text();
                 let data;
                 try {
@@ -147,13 +148,8 @@
         });
 
         downloadBtn.addEventListener('click', () => {
-            const a = document.createElement('a');
-            a.href = downloadUrl;
-            a.download = '';
-            a.target = '_blank';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            // Open the returned third-party API link in a new tab to start the download
+            window.open(downloadUrl, '_blank');
         });
 
         resetBtn.onclick = () => {
