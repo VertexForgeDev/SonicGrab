@@ -18,12 +18,12 @@ export default async function handler(req, res) {
     }
 
     try {
-        // Updated to the official endpoint path from the YouTube MP3 2025 marketplace schema
-        const response = await fetch(`https://youtube-mp3-2025.p.rapidapi.com/v1/social/youtube/audio`, {
+        // Updated to the official endpoint path from the YouTube M4A 2025 marketplace schema
+        const response = await fetch(`https://youtube-m4a-2025.p.rapidapi.com/v1/social/youtube/audio`, {
             method: 'POST',
             headers: {
                 'x-rapidapi-key': apiKey,
-                'x-rapidapi-host': 'youtube-mp3-2025.p.rapidapi.com',
+                'x-rapidapi-host': 'youtube-m4a-2025.p.rapidapi.com',
                 'Content-Type': 'application/json',
                 'User-Agent': 'Mozilla/5.0'
             },
