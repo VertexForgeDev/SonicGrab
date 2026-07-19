@@ -3,38 +3,48 @@ export default async function handler(req, res) {
         return res.status(405).json({ success: false, error: 'Method not allowed' });
     }
 
-    try {
-        const { url } = req.body;
-        const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
-        const videoId = match ? match[1] : null;
+    const { url } = req.body;
+    if (!url) return res.status(400).json({ success: false, error: "No URL provided" });
 
-        if (!videoId) return res.status(400).json({ success: false, error: "Invalid URL" });
+    const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
+    const videoId = match ? match[1] : null;
 
-        const response = await fetch(`https://youtube-mp36.p.rapidapi.com/dl?id=${videoId}`, {
-            method: 'GET',
-            headers: {
-                'x-rapidapi-key': process.env.RAPIDAPI_KEY,
-                'x-rapidapi-host': 'youtube-mp36.p.rapidapi.com'
+    if (!videoId) return res.status(400).json({ success: false, error: "Invalid YouTube URL" });
+    if (!process.env.RAPIDAPI_KEY) return res.status(500).json({ success: false, error: "Missing API configuration" });
+
+    // This function handles the API calls with retries for "processing" status
+    const fetchWithRetry = async (id, retries = 5) => {
+        for (let i = 0; i < retries; i++) {
+            const response = await fetch(`https://youtube-mp36.p.rapidapi.com/dl?id=${id}`, {
+                method: 'GET',
+                headers: {
+                    'x-rapidapi-key': process.env.RAPIDAPI_KEY,
+                    'x-rapidapi-host': 'youtube-mp36.p.rapidapi.com'
+                }
+            });
+
+            const text = await response.text();
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch (e) {
+                console.error("Non-JSON Response from API:", text);
+                throw new Error("API returned invalid data format");
             }
-        });
 
-        const text = await response.text();
-        
-        let data;
-        try {
-            data = JSON.parse(text);
-        } catch (e) {
-            console.error("API returned non-JSON response:", text);
-            return res.status(502).json({ success: false, error: "API returned an invalid format (check logs)" });
+            if (data.status === 'ok') return data;
+            if (data.status === 'processing') {
+                await new Promise(resolve => setTimeout(resolve, 2500)); // Wait 2.5s
+                continue;
+            }
+            throw new Error(data.msg || "Conversion failed on server");
         }
+        throw new Error("Conversion timed out. Please try a different video.");
+    };
 
-        if (data.status === 'ok') {
-            return res.status(200).json({ success: true, title: data.title, link: data.link });
-        } else if (data.status === 'processing') {
-            return res.status(202).json({ success: false, error: "Still processing, try again in 5 seconds" });
-        }
-        
-        return res.status(500).json({ success: false, error: data.msg || "Conversion failed" });
+    try {
+        const result = await fetchWithRetry(videoId);
+        return res.status(200).json({ success: true, title: result.title, link: result.link });
     } catch (error) {
         return res.status(500).json({ success: false, error: error.message });
     }
