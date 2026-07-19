@@ -13,7 +13,6 @@ export default async function handler(req, res) {
     if (!process.env.RAPIDAPI_KEY) return res.status(500).json({ success: false, error: "Missing API configuration" });
 
     try {
-        // Example using a provider that accepts format and quality payloads
         const response = await fetch(`https://youtube-to-mp315.p.rapidapi.com/download`, {
             method: 'POST',
             headers: {
@@ -25,13 +24,12 @@ export default async function handler(req, res) {
             body: JSON.stringify({
                 url: `https://www.youtube.com/watch?v=${videoId}`,
                 format: 'mp3',
-                quality: 320 // Forces the backend engine to compile at 320kbps
+                quality: 0 // Changed from 320 to 0. 0 tells the server to trigger maximum quality encoding.
             })
         });
 
         const data = await response.json();
         
-        // Note: Change 'data.downloadUrl' to match the exact JSON key your new provider returns
         return res.status(200).json({ 
             success: true, 
             title: data.title || "Audio Track", 
