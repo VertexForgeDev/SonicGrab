@@ -1,34 +1,46 @@
-const { execSync } = require('child_process');
+const ytdl = require('yt-dlp-exec');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
+    // 1. Method verification
     if (req.method !== 'POST') return res.status(405).send('Method not allowed');
     
-    // 1. Ensure we only write to the temp directory
+    // 2. Setup path in temp directory
     const tmpDir = os.tmpdir();
-    const outputPath = path.join(tmpDir, 'output.mp3');
+    const fileName = `audio_${Date.now()}.mp3`;
+    const outputPath = path.join(tmpDir, fileName);
 
     try {
         const { url } = req.body;
-        
-        // 2. Use full paths for binaries and force use of /tmp
-        // We assume yt-dlp is in your root folder
-        const command = `./yt-dlp -x --audio-format mp3 -o "${outputPath}" "${url}"`;
-        
-        execSync(command, { 
-            env: { ...process.env, PATH: process.env.PATH + ':' + process.cwd() },
-            stdio: 'inherit' 
+        if (!url) return res.status(400).json({ error: "No URL provided" });
+
+        // Use the library instead of shell execSync
+        await ytdl(url, {
+            extractAudio: true,
+            audioFormat: 'mp3',
+            output: outputPath
         });
 
-        const fileBuffer = fs.readFileSync(outputPath);
-        res.setHeader('Content-Type', 'audio/mpeg');
-        res.setHeader('Content-Disposition', 'attachment; filename="audio.mp3"');
-        res.send(fileBuffer);
+        // 3. Read and return the file
+        if (fs.existsSync(outputPath)) {
+            const fileBuffer = fs.readFileSync(outputPath);
+            res.setHeader('Content-Type', 'audio/mpeg');
+            res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+            res.send(fileBuffer);
+            
+            // Cleanup
+            fs.unlinkSync(outputPath);
+        } else {
+            throw new Error("Conversion failed to produce output file");
+        }
         
     } catch (err) {
         console.error("Conversion Error:", err);
-        res.status(500).json({ error: "Failed to convert. The video might be too long or restricted.", details: err.message });
+        res.status(500).json({ 
+            error: "Conversion failed. The video might be too long, private, or restricted.", 
+            details: err.message 
+        });
     }
-}
+};
