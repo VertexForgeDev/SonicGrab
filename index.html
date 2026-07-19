@@ -82,8 +82,7 @@
         <p>&copy; 2026 SonicGrab. By using this service, you agree to our terms of use.</p>
     </footer>
     <script>
-        // REPLACE THIS URL WITH YOUR ACTUAL PERSISTENT BACKEND URL (e.g., from Render/Railway)
-        const API_BASE = 'https://YOUR-BACKEND-URL-HERE'; 
+        const API_BASE = '/api'; 
         const inputForm = document.getElementById('inputForm');
         const urlInput = document.getElementById('urlInput');
         const convertBtn = document.getElementById('convertBtn');
@@ -109,25 +108,32 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ url })
                 });
-                const data = await response.json();
-                if (data.success) {
-                    downloadUrl = data.downloadUrl;
-                    videoTitle.textContent = data.title;
-                    processingState.classList.add('hidden');
-                    successCard.classList.remove('hidden');
-                } else {
-                    throw new Error(data.error);
-                }
+                
+                if (!response.ok) throw new Error("Conversion failed on server");
+                
+                const blob = await response.blob();
+                const objectUrl = URL.createObjectURL(blob);
+                
+                videoTitle.textContent = "Audio Download Ready";
+                downloadUrl = objectUrl;
+                
+                processingState.classList.add('hidden');
+                successCard.classList.remove('hidden');
             } catch (err) {
-                errorText.textContent = "Conversion failed. Verify your server is online.";
+                errorText.textContent = "Conversion failed. The video might be restricted or too long.";
                 errorBanner.classList.remove('hidden');
                 processingState.classList.add('hidden');
                 inputForm.classList.remove('hidden');
             }
         });
+
         downloadBtn.addEventListener('click', () => {
-            if (downloadUrl) window.location.href = API_BASE + downloadUrl;
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = 'audio.mp3';
+            a.click();
         });
+
         resetBtn.onclick = () => {
             successCard.classList.add('hidden');
             inputForm.classList.remove('hidden');
