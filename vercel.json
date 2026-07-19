@@ -1,5 +1,7 @@
 {
-  "rewrites": [
-    { "source": "/api/convert", "destination": "/api/convert.mjs" }
-  ]
+  "functions": {
+    "api/convert.mjs": {
+      "runtime": "vercel-node@latest"
+    }
+  }
 }
