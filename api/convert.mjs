@@ -17,7 +17,6 @@ export default async function handler(req, res) {
     }
 
     try {
-        // Fixed: Reverted the host names to the proper RapidAPI marketplace path
         const response = await fetch(`https://youtube-mp3-2025.p.rapidapi.com/v1/social/youtube/audio`, {
             method: 'POST',
             headers: {
@@ -29,7 +28,7 @@ export default async function handler(req, res) {
             body: JSON.stringify({
                 id: videoId,
                 quality: '320kbps',
-                ext: 'm4a' // Requests M4A container extraction inside the payload options
+                ext: 'm4a' 
             })
         });
 
