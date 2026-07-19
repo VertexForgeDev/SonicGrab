@@ -115,27 +115,32 @@
             processingState.classList.remove('hidden');
             
             try {
-                // Call our Vercel API proxy
                 const response = await fetch(`${API_BASE}/convert`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ url })
                 });
                 
-                const data = await response.json();
+                // Read text first to handle potential non-JSON error pages
+                const text = await response.text();
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    throw new Error("Received an invalid response from the server.");
+                }
                 
                 if (!response.ok || !data.success) {
                     throw new Error(data.error || "Conversion failed on server");
                 }
                 
-                // The API now returns a JSON with the title and direct MP3 link
                 videoTitle.textContent = data.title || "Audio Download Ready";
                 downloadUrl = data.link; 
                 
                 processingState.classList.add('hidden');
                 successCard.classList.remove('hidden');
             } catch (err) {
-                errorText.textContent = err.message || "Conversion failed. The video might be restricted or invalid.";
+                errorText.textContent = err.message || "An unexpected error occurred.";
                 errorBanner.classList.remove('hidden');
                 processingState.classList.add('hidden');
                 inputForm.classList.remove('hidden');
