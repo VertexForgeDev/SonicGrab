@@ -17,11 +17,12 @@ export default async function handler(req, res) {
     }
 
     try {
-        const response = await fetch(`https://youtube-mp3-2025.p.rapidapi.com/v1/social/youtube/audio`, {
+        // Swapped to the correct, active host to resolve the 404 proxy routing error
+        const response = await fetch(`https://youtube-mp36.p.rapidapi.com/v1/social/youtube/audio`, {
             method: 'POST',
             headers: {
                 'x-rapidapi-key': apiKey,
-                'x-rapidapi-host': 'youtube-mp3-2025.p.rapidapi.com',
+                'x-rapidapi-host': 'youtube-mp36.p.rapidapi.com',
                 'Content-Type': 'application/json',
                 'User-Agent': 'Mozilla/5.0'
             },
