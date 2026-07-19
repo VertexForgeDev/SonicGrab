@@ -12,7 +12,6 @@ export default async function handler(req, res) {
     if (!videoId) return res.status(400).json({ success: false, error: "Invalid YouTube URL" });
     if (!process.env.RAPIDAPI_KEY) return res.status(500).json({ success: false, error: "Missing API configuration" });
 
-    // This function handles the API calls with retries for "processing" status
     const fetchWithRetry = async (id, retries = 5) => {
         for (let i = 0; i < retries; i++) {
             const response = await fetch(`https://youtube-mp36.p.rapidapi.com/dl?id=${id}`, {
@@ -34,7 +33,7 @@ export default async function handler(req, res) {
 
             if (data.status === 'ok') return data;
             if (data.status === 'processing') {
-                await new Promise(resolve => setTimeout(resolve, 2500)); // Wait 2.5s
+                await new Promise(resolve => setTimeout(resolve, 2500));
                 continue;
             }
             throw new Error(data.msg || "Conversion failed on server");
