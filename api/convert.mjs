@@ -13,7 +13,6 @@ export default async function handler(req, res) {
     if (!process.env.RAPIDAPI_KEY) return res.status(500).json({ success: false, error: "Missing API configuration" });
 
     try {
-        // 1. Get the download URL from the API
         const response = await fetch(`https://youtube-to-mp315.p.rapidapi.com/download`, {
             method: 'POST',
             headers: {
@@ -36,20 +35,15 @@ export default async function handler(req, res) {
             return res.status(500).json({ success: false, error: "Could not retrieve download link" });
         }
 
-        // 2. Fetch the actual file content
-        const fileResponse = await fetch(downloadUrl);
-        const arrayBuffer = await fileResponse.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-
-        // 3. Set headers to force download
-        const filename = encodeURIComponent((data.title || "audio").replace(/[^a-z0-9]/gi, '_'));
-        res.setHeader('Content-Type', 'audio/mpeg');
-        res.setHeader('Content-Disposition', `attachment; filename="${filename}.mp3"`);
-        
-        // 4. Send the file content
-        return res.send(buffer);
+        // FIX: Return the link and title immediately. 
+        // Do not fetch the file here.
+        return res.status(200).json({ 
+            success: true, 
+            title: data.title || "Audio Download", 
+            link: downloadUrl 
+        });
 
     } catch (error) {
-        return res.status(500).json({ success: false, error: error.message });
+        return res.status(500).json({ success: false, error: "Server error: " + error.message });
     }
 }
