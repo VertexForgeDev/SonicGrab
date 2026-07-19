@@ -1,54 +1,42 @@
-/* STREAMING_CHUNK:Updating API handler with environment debug logic... */
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ success: false, error: 'Method not allowed' });
     }
 
+    const { url } = req.body;
+    const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
+    const videoId = match ? match[1] : null;
+
+    if (!videoId) return res.status(400).json({ success: false, error: "Invalid URL" });
+
+    // Helper
+    const fetchWithRetry = async (id, retries = 5) => {
+        for (let i = 0; i < retries; i++) {
+            const response = await fetch(`https://youtube-mp36.p.rapidapi.com/dl?id=${id}`, {
+                method: 'GET',
+                headers: {
+                    'x-rapidapi-key': process.env.RAPIDAPI_KEY,
+                    'x-rapidapi-host': 'youtube-mp36.p.rapidapi.com'
+                }
+            });
+
+            const data = await response.json();
+            
+            if (data.status === 'ok') return data;
+            if (data.status === 'processing') {
+                await new Promise(resolve => setTimeout(resolve, 1500)); // Wait 1.5s
+                continue;
+            }
+            throw new Error(data.msg || "Conversion failed");
+        }
+        throw new Error("Conversion timed out. Please try again.");
+    };
+
     try {
-        const { url } = req.body;
-        const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
-        const videoId = match ? match[1] : null;
-
-        if (!videoId) {
-            return res.status(400).json({ success: false, error: "Invalid URL" });
-        }
-
-        // Debug log to check if key exists at runtime
-        const apiKey = process.env.RAPIDAPI_KEY;
-        if (!apiKey) {
-            console.error("DEBUG: RAPIDAPI_KEY is undefined in environment");
-            return res.status(500).json({ success: false, error: "Configuration error: API Key missing" });
-        }
-
-        const response = await fetch(`https://youtube-mp36.p.rapidapi.com/dl?id=${videoId}`, {
-            method: 'GET',
-            headers: {
-                'x-rapidapi-key': apiKey,
-                'x-rapidapi-host': 'youtube-mp36.p.rapidapi.com'
-            }
-        });
-
-        // Get the raw text first to avoid JSON parse errors
-        const responseText = await response.text();
-        
-        try {
-            const data = JSON.parse(responseText);
-            if (data && data.link) {
-                return res.status(200).json({
-                    success: true,
-                    title: data.title,
-                    link: data.link
-                });
-            }
-            return res.status(500).json({ success: false, error: data.msg || "Conversion failed" });
-        } catch (parseError) {
-            console.error("Failed to parse API response. Raw response:", responseText);
-            return res.status(500).json({ success: false, error: "External API error" });
-        }
-
+        const result = await fetchWithRetry(videoId);
+        return res.status(200).json({ success: true, title: result.title, link: result.link });
     } catch (error) {
-        console.error("Internal Error:", error);
-        return res.status(500).json({ success: false, error: "Internal server error" });
+        return res.status(500).json({ success: false, error: error.message });
     }
 }
 ```eof
