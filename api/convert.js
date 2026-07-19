@@ -12,8 +12,7 @@ export default async function handler(req, res) {
     if (!videoId) return res.status(400).json({ error: "Invalid YouTube URL" });
 
     try {
-        // THIS IS THE CRITICAL CHANGE: 
-        // It now uses the variable you set in Vercel, not the placeholder text.
+        // a
         const response = await fetch(`https://youtube-mp36.p.rapidapi.com/dl?id=${videoId}`, {
             method: 'GET',
             headers: {
