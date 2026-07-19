@@ -1,49 +1,151 @@
-export default async function handler(req, res) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZLH78P4Y00"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZLH78P4Y00');
+    </script>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%234f46e5%22/><path d=%22M30 50 Q50 20 70 50 T30 80%22 stroke=%22white%22 stroke-width=%228%22 fill=%22none%22 stroke-linecap=%22round%22/></svg>">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SonicGrab | High-Quality YouTube to MP3 Converter</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; }
+        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(16px); }
+        .animate-pulse-slow { animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200 min-h-screen">
+    <nav class="max-w-4xl mx-auto p-6 flex justify-between items-center">
+        <a href="#" class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">SonicGrab</a>
+    </nav>
+    
+    <main class="max-w-4xl mx-auto px-6 pb-20">
+        <section class="glass p-8 md:p-12 rounded-[2rem] border border-slate-800 shadow-2xl mb-16">
+            <h1 class="text-3xl md:text-5xl font-extrabold text-white mb-4">YouTube to MP3 Converter</h1>
+            <p class="text-slate-400 mb-8">Convert YouTube videos to high-quality 320kbps MP3 files instantly. No registration, no intrusive ads.</p>
+            
+            <div id="converterBox" class="flex flex-col gap-4">
+                <!-- Input Form -->
+                <div id="inputForm" class="flex flex-col gap-4">
+                    <input type="text" id="urlInput" placeholder="Paste YouTube video URL here..." class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 focus:outline-none focus:border-indigo-500 transition-all text-lg text-white placeholder-slate-500">
+                    <button id="convertBtn" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-4 rounded-2xl transition-all shadow-lg text-lg flex items-center justify-center gap-2">
+                        Start Conversion
+                    </button>
+                </div>
+                
+                <!-- Processing State -->
+                <div id="processingState" class="hidden flex flex-col items-center justify-center py-6 gap-4 text-center">
+                    <div class="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                    <div>
+                        <p class="text-lg font-semibold text-white animate-pulse">Extracting High-Quality Audio...</p>
+                        <p class="text-xs text-slate-500 mt-1">This takes about 5-15 seconds.</p>
+                    </div>
+                </div>
+                
+                <!-- Success State -->
+                <div id="successCard" class="hidden bg-slate-900/80 border border-emerald-500/20 p-6 rounded-2xl flex flex-col gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="p-3 bg-emerald-500/10 rounded-xl text-emerald-400">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Conversion Successful</h3>
+                            <p id="videoTitle" class="text-lg font-bold text-white truncate mt-1">Video Title Placeholder</p>
+                            <p class="text-xs text-slate-400 mt-0.5">Bitrate: 320 kbps (High Fidelity)</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3 mt-2">
+                        <button id="downloadBtn" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all text-center flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Download MP3
+                        </button>
+                        <button id="resetBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-3 px-6 rounded-xl border border-slate-700 transition-all">
+                            Convert Another
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Error State -->
+                <div id="errorBanner" class="hidden bg-red-950/40 border border-red-500/30 p-4 rounded-xl text-red-300 text-sm flex gap-3 items-center">
+                    <svg class="w-5 h-5 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    <span id="errorText">An error occurred during conversion.</span>
+                </div>
+            </div>
+        </section>
+        
+        <section class="space-y-12">
+            <div>
+                <h2 class="text-2xl font-semibold text-white mb-4">Fast and Ad-Free Audio Extraction</h2>
+                <p class="leading-relaxed text-slate-400">SonicGrab provides one of the fastest ways to convert videos to high-fidelity audio. Our systems are optimized to deliver your MP3 instantly.</p>
+            </div>
+        </section>
+    </main>
+    
+    <script>
+        const inputForm = document.getElementById('inputForm');
+        const urlInput = document.getElementById('urlInput');
+        const convertBtn = document.getElementById('convertBtn');
+        const processingState = document.getElementById('processingState');
+        const successCard = document.getElementById('successCard');
+        const videoTitle = document.getElementById('videoTitle');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const errorBanner = document.getElementById('errorBanner');
+        const errorText = document.getElementById('errorText');
 
-    const { url } = req.body;
-    if (!url) {
-        return res.status(400).json({ error: "No URL provided" });
-    }
+        let downloadUrl = '';
 
-    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
-    const match = url.match(regex);
-    const videoId = match ? match[1] : null;
-
-    if (!videoId) {
-        return res.status(400).json({ error: "Invalid YouTube URL format." });
-    }
-
-    try {
-        const options = {
-            method: 'GET',
-            headers: {
-                // Ensure you have added RAPIDAPI_KEY to your Vercel Environment Variables.
-                'X-RapidAPI-Key': process.env.RAPIDAPI_KEY || 'YOUR_RAPIDAPI_KEY_HERE', 
-                'X-RapidAPI-Host': 'youtube-mp36.p.rapidapi.com'
+        convertBtn.addEventListener('click', async () => {
+            const url = urlInput.value.trim();
+            if (!url) return;
+            
+            errorBanner.classList.add('hidden');
+            inputForm.classList.add('hidden');
+            processingState.classList.remove('hidden');
+            
+            try {
+                // Pointing to your backend serverless function
+                const response = await fetch('/api/convert', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || "Conversion failed on server");
+                }
+                
+                videoTitle.textContent = data.title || "Audio Download Ready";
+                downloadUrl = data.link; 
+                
+                processingState.classList.add('hidden');
+                successCard.classList.remove('hidden');
+            } catch (err) {
+                errorText.textContent = err.message || "Conversion failed. Please try a different video.";
+                errorBanner.classList.remove('hidden');
+                processingState.classList.add('hidden');
+                inputForm.classList.remove('hidden');
             }
-        };
-
-        const response = await fetch(`https://youtube-mp36.p.rapidapi.com/dl?id=${videoId}`, options);
-        const data = await response.json();
-
-        if (data.status === 'fail' || !data.link) {
-            throw new Error(data.msg || "API could not process this video. It may be blocked.");
-        }
-
-        return res.status(200).json({
-            success: true,
-            title: data.title || "YouTube Audio",
-            link: data.link 
         });
 
-    } catch (error) {
-        console.error("API Error:", error);
-        return res.status(500).json({ 
-            success: false, 
-            error: "Failed to communicate with the conversion server." 
+        downloadBtn.addEventListener('click', () => {
+            if (downloadUrl) window.open(downloadUrl, '_blank');
         });
-    }
-}
+
+        resetBtn.addEventListener('click', () => {
+            successCard.classList.add('hidden');
+            inputForm.classList.remove('hidden');
+            urlInput.value = '';
+        });
+    </script>
+</body>
+</html>
