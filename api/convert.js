@@ -1,3 +1,4 @@
+/* STREAMING_CHUNK:Using secure environment variable from Vercel... */
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
@@ -8,21 +9,21 @@ export default async function handler(req, res) {
     const match = url.match(regex);
     const videoId = match ? match[1] : null;
 
-    if (!videoId) return res.status(400).json({ error: "Invalid URL" });
+    if (!videoId) return res.status(400).json({ error: "Invalid YouTube URL" });
 
     try {
+        // THIS IS THE CRITICAL CHANGE: 
+        // It now uses the variable you set in Vercel, not the placeholder text.
         const response = await fetch(`https://youtube-mp36.p.rapidapi.com/dl?id=${videoId}`, {
             method: 'GET',
             headers: {
-                // PASTE YOUR REAL RAPIDAPI KEY HERE
-                'x-rapidapi-key': 'PASTE_YOUR_LONG_KEY_HERE', 
+                'x-rapidapi-key': process.env.RAPIDAPI_KEY, 
                 'x-rapidapi-host': 'youtube-mp36.p.rapidapi.com'
             }
         });
 
         const data = await response.json();
 
-        // This ensures your frontend gets the correct data
         if (data.status === 'ok' || data.link) {
             return res.status(200).json({
                 success: true,
