@@ -11,8 +11,8 @@ export default async function handler(req, res) {
 
     if (!videoId) return res.status(400).json({ success: false, error: "Invalid YouTube URL" });
 
-    // Look for RAPIDAPI or RAPIDAPI_KEY as fallback
-    const apiKey = process.env.RAPIDAPI || process.env.RAPIDAPI_KEY;
+    // Using RAPIDAPI to match your Vercel Environment Variable name
+    const apiKey = process.env.RAPIDAPI;
     if (!apiKey) {
         return res.status(500).json({ success: false, error: "Missing API configuration" });
     }
