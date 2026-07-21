@@ -17,61 +17,70 @@ export default async function handler(req, res) {
         return res.status(500).json({ success: false, error: "Missing RAPIDAPI environment variable in Vercel" });
     }
 
-    try {
-        // Optional pre-check: Request conversion from the endpoint
-        const response = await fetch(`https://youtube-mp36.p.rapidapi.com/v1/social/youtube/audio`, {
-            method: 'POST',
-            headers: {
-                'x-rapidapi-key': apiKey,
-                'x-rapidapi-host': 'youtube-mp36.p.rapidapi.com',
-                'Content-Type': 'application/json',
-                'User-Agent': 'Mozilla/5.0'
-            },
-            body: JSON.stringify({
-                url: url,
-                quality: '320kbps',
-                ext: 'm4a' 
-            })
-        });
+    // List of qualities/formats to attempt in order if 320kbps fails
+    const payloadVariants = [
+        { url: url, quality: '320kbps', ext: 'm4a' },
+        { url: url, quality: '128kbps', ext: 'm4a' },
+        { url: url, quality: '320kbps', ext: 'mp3' },
+        { url: url, quality: '128kbps', ext: 'mp3' }
+    ];
 
-        // If the upstream host returned an HTML timeout page instead of JSON
-        const contentType = response.headers.get("content-type");
-        if (response.status === 504 || (contentType && contentType.includes("text/html"))) {
-            return res.status(504).json({
-                success: false,
-                error: "The video server timed out while processing this file. The video is likely too long to convert in real time. Please try a video under 20 minutes."
+    let lastErrorData = null;
+
+    for (const variant of payloadVariants) {
+        try {
+            const response = await fetch(`https://youtube-mp3-2025.p.rapidapi.com/v1/social/youtube/audio`, {
+                method: 'POST',
+                headers: {
+                    'x-rapidapi-key': apiKey,
+                    'x-rapidapi-host': 'youtube-mp3-2025.p.rapidapi.com',
+                    'Content-Type': 'application/json',
+                    'User-Agent': 'Mozilla/5.0'
+                },
+                body: JSON.stringify(variant)
             });
+
+            // Handle upstream Gateway Timeout
+            const contentType = response.headers.get("content-type");
+            if (response.status === 504 || (contentType && contentType.includes("text/html"))) {
+                return res.status(504).json({
+                    success: false,
+                    error: "The video server timed out while processing this file. The video is likely too long to convert in real time."
+                });
+            }
+
+            const data = await response.json();
+
+            // Check if rapidapi route was missing
+            if (data.message && data.message.includes("doesn't exists")) {
+                return res.status(404).json({
+                    success: false,
+                    error: "RapidAPI endpoint not found. Please verify your subscription to 'YouTube MP3 2025'.",
+                    rawApiResponse: data
+                });
+            }
+
+            const downloadUrl = data.linkDownload || data.linkDownloadProgress || data.link;
+
+            // If we received a valid link, return immediately
+            if (downloadUrl && data.error !== "true" && data.error !== true) {
+                return res.status(200).json({ 
+                    success: true, 
+                    title: data.title || "Audio Download", 
+                    link: downloadUrl 
+                });
+            }
+
+            lastErrorData = data;
+        } catch (e) {
+            lastErrorData = { message: e.message };
         }
-
-        const data = await response.json();
-
-        // Check if downstream API indicated a missing resource/endpoint
-        if (data.message && data.message.includes("doesn't exists")) {
-            return res.status(404).json({
-                success: false,
-                error: "API routing error. Please ensure subscription to the active endpoint.",
-                rawApiResponse: data
-            });
-        }
-
-        const downloadUrl = data.linkDownload || data.linkDownloadProgress || data.link;
-
-        if (!downloadUrl || data.error === "true" || data.error === true) {
-            return res.status(500).json({ 
-                success: false, 
-                error: data.msg || "Could not retrieve 320kbps download link from provider.", 
-                apiStatus: response.status,
-                rawApiResponse: data 
-            });
-        }
-
-        return res.status(200).json({ 
-            success: true, 
-            title: data.title || "Audio Download (M4A)", 
-            link: downloadUrl 
-        });
-
-    } catch (error) {
-        return res.status(500).json({ success: false, error: "Server error: " + error.message });
     }
+
+    // If all payload variants fail
+    return res.status(500).json({ 
+        success: false, 
+        error: "Could not retrieve download link. The video may be region-restricted or copyright-protected.", 
+        rawApiResponse: lastErrorData 
+    });
 }
