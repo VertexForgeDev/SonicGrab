@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SonicGrab | High-Quality YouTube to M4A Converter</title>
-        
+            
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -25,12 +25,17 @@
     <nav class="max-w-4xl mx-auto p-6 flex justify-between items-center">
         <a href="#" class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">SonicGrab</a>
     </nav>
-        
+            
     <main class="max-w-4xl mx-auto px-6 pb-20">
         <section class="glass p-8 md:p-12 rounded-[2rem] border border-slate-800 shadow-2xl mb-16">
             <h1 class="text-3xl md:text-5xl font-extrabold text-white mb-4">YouTube to M4A Converter</h1>
-            <p class="text-slate-400 mb-8">Convert YouTube videos to high-quality M4A files instantly. No registration, no intrusive ads.</p>
-                        
+            <p class="text-slate-400 mb-3">Convert YouTube videos to high-quality M4A files instantly. No registration, no intrusive ads.</p>
+            
+            <!-- Video Length Notice -->
+            <p class="text-xs text-amber-400/90 font-medium mb-8 flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/20 w-fit px-3 py-1.5 rounded-full">
+                <span>💡</span> Note: Only videos up to 20 minutes are supported for fast processing.
+            </p>
+                                    
             <div id="converterBox" class="flex flex-col gap-4">
                 <!-- Input Form -->
                 <div id="inputForm" class="flex flex-col gap-4">
@@ -39,7 +44,7 @@
                         Start Conversion
                     </button>
                 </div>
-                                
+                                                
                 <!-- Processing State -->
                 <div id="processingState" class="hidden flex flex-col items-center justify-center py-6 gap-4 text-center">
                     <div class="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
@@ -48,7 +53,7 @@
                         <p class="text-xs text-slate-500 mt-1">This takes about 5-15 seconds.</p>
                     </div>
                 </div>
-                                
+                                                
                 <!-- Success State -->
                 <div id="successCard" class="hidden bg-slate-900/80 border border-emerald-500/20 p-6 rounded-2xl flex flex-col gap-4">
                     <div class="flex items-start gap-4">
@@ -58,20 +63,20 @@
                         <div class="flex-1 min-w-0">
                             <h3 class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Conversion Successful</h3>
                             <p id="videoTitle" class="text-lg font-bold text-white truncate mt-1">Video Title Placeholder</p>
-                            <p class="text-xs text-slate-400 mt-0.5">High Fidelity M4A</p>
+                            <p class="text-xs text-slate-400 mt-0.5">High Fidelity Audio</p>
                         </div>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-3 mt-2">
                         <button id="downloadBtn" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all text-center flex items-center justify-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            Download M4A
+                            Download Audio
                         </button>
                         <button id="resetBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-3 px-6 rounded-xl border border-slate-700 transition-all">
                             Convert Another
                         </button>
                     </div>
                 </div>
-                                
+                                                
                 <!-- Error State -->
                 <div id="errorBanner" class="hidden bg-red-950/40 border border-red-500/30 p-4 rounded-xl text-red-300 text-sm flex gap-3 items-center">
                     <svg class="w-5 h-5 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -79,19 +84,17 @@
                 </div>
             </div>
         </section>
-                
+                        
         <section class="space-y-12">
             <div>
                 <h2 class="text-2xl font-semibold text-white mb-4">Fast and Ad-Free Audio Extraction</h2>
-                <p class="leading-relaxed text-slate-400">SonicGrab provides one of the fastest ways to convert videos to high-fidelity audio. Our systems are optimized to deliver your M4A instantly.</p>
+                <p class="leading-relaxed text-slate-400">SonicGrab provides one of the fastest ways to convert videos to high-fidelity audio. Our systems are optimized to deliver your files instantly.</p>
             </div>
         </section>
     </main>
-
     <footer class="text-center p-8 text-slate-600 text-sm border-t border-slate-900">
         <p>&copy; 2026 SonicGrab. By using this service, you agree to our terms of use.</p>
     </footer>
-
     <script>
         const API_BASE = '/api'; 
         const inputForm = document.getElementById('inputForm');
@@ -116,25 +119,22 @@
             processingState.classList.remove('hidden');
             
             try {
-                // Hits /api/convert to map directly to convert.mjs
                 const response = await fetch(`${API_BASE}/convert`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ url })
                 });
-                
-                // Explicitly check for upstream 504 timeouts from Cloudflare
+
                 if (response.status === 504) {
-                    throw new Error("Conversion timed out. The file might be too large for synchronous processing.");
+                    throw new Error("This video is too long to convert. Only videos under 20 minutes are supported.");
                 }
 
-                // Read text first to safely prevent crashes on HTML error responses
                 const text = await response.text();
                 let data;
                 try {
                     data = JSON.parse(text);
                 } catch (e) {
-                    throw new Error("Received an invalid response format from the server.");
+                    throw new Error("Conversion timed out. Please try a shorter video (under 20 minutes).");
                 }
                 
                 if (!response.ok || !data.success) {
@@ -157,7 +157,6 @@
         downloadBtn.addEventListener('click', () => {
             if (!downloadUrl) return;
             
-            // Programmatically trigger download without triggering popup blockers
             const a = document.createElement('a');
             a.href = downloadUrl;
             a.target = '_blank';
@@ -166,7 +165,6 @@
             a.click();
             a.remove();
         });
-
         resetBtn.onclick = () => {
             successCard.classList.add('hidden');
             inputForm.classList.remove('hidden');
@@ -174,5 +172,6 @@
         };
     </script>
     <script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_5M2212zhBSs5ZoR9sBaZvEjN6VwH" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
+    <script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_BHyv5qpmL3Q1RoC2qSJWTmSMHjeJ" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
 </body>
 </html>
