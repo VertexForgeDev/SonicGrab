@@ -16,7 +16,7 @@ export default async function handler(req, res) {
         const response = await fetch(`https://youtube-to-mp315.p.rapidapi.com/download`, {
             method: 'POST',
             headers: {
-                'x-rapidapi-key': process.env.RAPIDAPI_KEY,
+                'x-rapidapi-key': process.env.RAPIDAPI,
                 'x-rapidapi-host': 'youtube-to-mp315.p.rapidapi.com',
                 'Content-Type': 'application/json',
                 'User-Agent': 'Mozilla/5.0'
