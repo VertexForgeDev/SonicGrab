@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     const { url } = req.body;
     if (!url) return res.status(400).json({ success: false, error: "No URL provided" });
 
-    // Keep the regex validation to ensure the URL is a real YouTube link before sending it to the API
+    // Validate YouTube URL structure
     const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
     const videoId = match ? match[1] : null;
 
@@ -18,28 +18,38 @@ export default async function handler(req, res) {
     }
 
     try {
-        const response = await fetch(`https://youtube-mp3-2025.p.rapidapi.com/v1/social/youtube/audio`, {
+        // Optional pre-check: Request conversion from the endpoint
+        const response = await fetch(`https://youtube-mp36.p.rapidapi.com/v1/social/youtube/audio`, {
             method: 'POST',
             headers: {
                 'x-rapidapi-key': apiKey,
-                'x-rapidapi-host': 'youtube-mp3-2025.p.rapidapi.com',
+                'x-rapidapi-host': 'youtube-mp36.p.rapidapi.com',
                 'Content-Type': 'application/json',
                 'User-Agent': 'Mozilla/5.0'
             },
             body: JSON.stringify({
-                url: url,          // Pass the complete URL, not the videoId
-                quality: '320kbps', // Set target audio resolution
-                ext: 'm4a'          // Keep native container format
+                url: url,
+                quality: '320kbps',
+                ext: 'm4a' 
             })
         });
 
+        // If the upstream host returned an HTML timeout page instead of JSON
+        const contentType = response.headers.get("content-type");
+        if (response.status === 504 || (contentType && contentType.includes("text/html"))) {
+            return res.status(504).json({
+                success: false,
+                error: "The video server timed out while processing this file. The video is likely too long to convert in real time. Please try a video under 20 minutes."
+            });
+        }
+
         const data = await response.json();
 
-        // Handle structural error response objects
+        // Check if downstream API indicated a missing resource/endpoint
         if (data.message && data.message.includes("doesn't exists")) {
             return res.status(404).json({
                 success: false,
-                error: "Endpoint error. Verify your account is actively subscribed to YouTube MP3 2025 on RapidAPI.",
+                error: "API routing error. Please ensure subscription to the active endpoint.",
                 rawApiResponse: data
             });
         }
@@ -49,7 +59,7 @@ export default async function handler(req, res) {
         if (!downloadUrl || data.error === "true" || data.error === true) {
             return res.status(500).json({ 
                 success: false, 
-                error: "Could not retrieve download link from the API provider", 
+                error: data.msg || "Could not retrieve 320kbps download link from provider.", 
                 apiStatus: response.status,
                 rawApiResponse: data 
             });
