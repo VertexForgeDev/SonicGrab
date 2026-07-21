@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZLH78P4Y00"></script>
     <script>
@@ -9,8 +9,12 @@
       gtag('config', 'G-ZLH78P4Y00');
     </script>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%234f46e5%22/><path d=%22M30 50 Q50 20 70 50 T30 80%22 stroke=%22white%22 stroke-width=%228%22 fill=%22none%22 stroke-linecap=%22round%22/></svg>">
+    
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#020617">
+    <meta name="mobile-web-app-capable" content="yes">
+    
     <title>SonicGrab | High-Quality YouTube to M4A Converter</title>
         
     <script src="https://cdn.tailwindcss.com"></script>
@@ -18,101 +22,101 @@
     <style>
         body { font-family: 'Outfit', sans-serif; }
         .glass { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(20px); }
-        .glow { box-shadow: 0 0 50px -10px rgba(79, 70, 229, 0.25); }
+        .glow { box-shadow: 0 0 50px -10px rgba(79, 70, 229, 0.2); }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-200 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+<body class="bg-slate-950 text-slate-200 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white antialiased overflow-x-hidden">
 
     <!-- Background Ambient Glow -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-        <div class="absolute -top-40 -left-40 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl"></div>
-        <div class="absolute top-1/3 -right-40 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl"></div>
+        <div class="absolute -top-40 -left-40 w-72 sm:w-96 h-72 sm:h-96 bg-indigo-600/20 rounded-full blur-3xl"></div>
+        <div class="absolute top-1/3 -right-40 w-72 sm:w-96 h-72 sm:h-96 bg-purple-600/15 rounded-full blur-3xl"></div>
     </div>
 
     <!-- Header Navigation -->
     <header class="border-b border-slate-800/60 backdrop-blur-md sticky top-0 z-50 bg-slate-950/80">
-        <nav class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="flex items-center gap-2 text-2xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
-                <svg class="w-8 h-8 text-indigo-500 inline-block" viewBox="0 0 100 100">
+        <nav class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 sm:py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-2 text-xl sm:text-2xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
+                <svg class="w-7 h-7 sm:w-8 sm:h-8 text-indigo-500 inline-block flex-shrink-0" viewBox="0 0 100 100">
                     <rect width="100" height="100" rx="24" fill="#4f46e5"/>
                     <path d="M30 50 Q50 20 70 50 T30 80" stroke="white" stroke-width="8" fill="none" stroke-linecap="round"/>
                 </svg>
                 SonicGrab
             </a>
-            <span class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-indigo-400">
-                320kbps Audio
+            <span class="text-[11px] sm:text-xs font-semibold px-2.5 sm:px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-indigo-400">
+                High-Quality M4A Format
             </span>
         </nav>
     </header>
         
-    <main class="max-w-4xl mx-auto px-6 py-12 flex-1">
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex-1 w-full">
         <!-- Hero & Converter Card -->
-        <section class="glass p-8 md:p-12 rounded-[2.5rem] border border-slate-800/80 shadow-2xl glow mb-16 relative">
-            <div class="text-center max-w-2xl mx-auto mb-8">
-                <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight mb-4 leading-tight">
-                    YouTube to <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">Audio Converter</span>
+        <section class="glass p-5 sm:p-8 md:p-12 rounded-2xl sm:rounded-[2.5rem] border border-slate-800/80 shadow-2xl glow mb-8 sm:mb-16 relative">
+            <div class="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
+                <h1 class="text-2xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-3 sm:mb-4 leading-tight">
+                    YouTube to <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">M4A Converter</span>
                 </h1>
-                <p class="text-slate-400 text-base md:text-lg">
-                    Extract crystal-clear, high-fidelity sound directly from videos in seconds.
+                <p class="text-slate-400 text-sm sm:text-base md:text-lg">
+                    Convert YouTube videos to high-fidelity M4A audio files instantly.
                 </p>
                 
                 <!-- Trust Badges -->
-                <div class="flex flex-wrap justify-center gap-3 mt-4">
-                    <span class="text-xs text-slate-400 bg-slate-900/80 border border-slate-800 px-3 py-1 rounded-full">⚡ High-Speed Engine</span>
-                    <span class="text-xs text-slate-400 bg-slate-900/80 border border-slate-800 px-3 py-1 rounded-full">🔒 100% Secure & Ad-Free</span>
-                    <span class="text-xs text-amber-400/90 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full">⏱️ Videos &lt; 20 Mins</span>
+                <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mt-4">
+                    <span class="text-[11px] sm:text-xs text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2.5 sm:px-3 py-1 rounded-full font-medium">🎵 Format: M4A Audio</span>
+                    <span class="text-[11px] sm:text-xs text-slate-400 bg-slate-900/80 border border-slate-800 px-2.5 sm:px-3 py-1 rounded-full">⚡ High-Speed Engine</span>
+                    <span class="text-[11px] sm:text-xs text-amber-400/90 bg-amber-500/10 border border-amber-500/20 px-2.5 sm:px-3 py-1 rounded-full">⏱️ Videos &lt; 20 Mins</span>
                 </div>
             </div>
                         
-            <div id="converterBox" class="max-w-xl mx-auto">
+            <div id="converterBox" class="max-w-xl mx-auto w-full">
                 <!-- Input Form -->
                 <div id="inputForm" class="flex flex-col gap-3">
-                    <div class="relative flex items-center">
-                        <input type="text" id="urlInput" placeholder="Paste YouTube link (e.g. https://youtube.com/watch?...)" class="w-full p-4 pr-20 rounded-2xl bg-slate-900/90 border border-slate-700/80 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-base text-white placeholder-slate-500 shadow-inner">
-                        <button id="pasteBtn" type="button" class="absolute right-3 px-3 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition-all border border-slate-700">
+                    <div class="relative flex items-center w-full">
+                        <input type="text" id="urlInput" placeholder="Paste YouTube link here..." class="w-full min-h-[52px] p-3.5 sm:p-4 pr-20 rounded-xl sm:rounded-2xl bg-slate-900/90 border border-slate-700/80 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-sm sm:text-base text-white placeholder-slate-500 shadow-inner">
+                        <button id="pasteBtn" type="button" class="absolute right-2.5 px-3 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-300 rounded-lg sm:rounded-xl transition-all border border-slate-700">
                             Paste
                         </button>
                     </div>
-                    <button id="convertBtn" class="w-full bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:opacity-95 text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-indigo-600/20 text-lg flex items-center justify-center gap-2 active:scale-[0.99]">
-                        Start Conversion
+                    <button id="convertBtn" class="w-full min-h-[52px] bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:opacity-95 text-white font-bold py-3.5 sm:py-4 rounded-xl sm:rounded-2xl transition-all shadow-lg shadow-indigo-600/20 text-base sm:text-lg flex items-center justify-center gap-2 active:scale-[0.99]">
+                        Convert to M4A
                     </button>
                 </div>
                                 
                 <!-- Processing State -->
-                <div id="processingState" class="hidden flex flex-col items-center justify-center py-8 gap-4 text-center">
+                <div id="processingState" class="hidden flex flex-col items-center justify-center py-6 sm:py-8 gap-4 text-center">
                     <div class="relative flex items-center justify-center">
-                        <div class="w-14 h-14 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin"></div>
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin"></div>
                     </div>
                     <div>
-                        <p class="text-lg font-bold text-white animate-pulse">Processing Your Audio...</p>
-                        <p class="text-xs text-slate-400 mt-1">Downloading stream and extracting 320kbps audio...</p>
+                        <p class="text-base sm:text-lg font-bold text-white animate-pulse">Extracting M4A Audio...</p>
+                        <p class="text-xs text-slate-400 mt-1">Processing high-quality M4A file format...</p>
                     </div>
                 </div>
                                 
                 <!-- Success State -->
-                <div id="successCard" class="hidden bg-slate-900/90 border border-emerald-500/30 p-6 rounded-2xl flex flex-col gap-4 shadow-lg">
-                    <div class="flex items-center gap-4">
-                        <div class="p-3 bg-emerald-500/10 rounded-xl text-emerald-400 border border-emerald-500/20">
-                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div id="successCard" class="hidden bg-slate-900/90 border border-emerald-500/30 p-4 sm:p-6 rounded-xl sm:rounded-2xl flex flex-col gap-4 shadow-lg">
+                    <div class="flex items-center gap-3 sm:gap-4">
+                        <div class="p-2.5 sm:p-3 bg-emerald-500/10 rounded-xl text-emerald-400 border border-emerald-500/20 flex-shrink-0">
+                            <svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Ready to Download</span>
-                            <p id="videoTitle" class="text-base font-bold text-white truncate mt-1">Video Title Placeholder</p>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">M4A Ready for Download</span>
+                            <p id="videoTitle" class="text-sm sm:text-base font-bold text-white truncate mt-1">Video Title Placeholder</p>
                         </div>
                     </div>
-                    <div class="flex flex-col sm:flex-row gap-3 mt-2">
-                        <button id="downloadBtn" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all text-center flex items-center justify-center gap-2 active:scale-[0.99]">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            Download Audio
+                    <div class="flex flex-col sm:flex-row gap-2.5 sm:gap-3 mt-1">
+                        <button id="downloadBtn" class="flex-1 min-h-[48px] bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3 px-5 rounded-xl shadow-lg transition-all text-center flex items-center justify-center gap-2 active:scale-[0.99] text-sm sm:text-base">
+                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Download M4A Audio
                         </button>
-                        <button id="resetBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-3 px-6 rounded-xl border border-slate-700 transition-all">
+                        <button id="resetBtn" class="min-h-[48px] bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-3 px-5 rounded-xl border border-slate-700 transition-all text-sm sm:text-base">
                             Convert Another
                         </button>
                     </div>
                 </div>
                                 
                 <!-- Error Banner -->
-                <div id="errorBanner" class="hidden bg-red-950/50 border border-red-500/40 p-4 rounded-xl text-red-300 text-sm flex gap-3 items-center mt-2">
+                <div id="errorBanner" class="hidden bg-red-950/50 border border-red-500/40 p-3.5 sm:p-4 rounded-xl text-red-300 text-xs sm:text-sm flex gap-3 items-center mt-2 break-all">
                     <svg class="w-5 h-5 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                     <span id="errorText">An error occurred during conversion.</span>
                 </div>
@@ -120,47 +124,47 @@
         </section>
                 
         <!-- Features Grid -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-            <div class="glass p-6 rounded-2xl border border-slate-800/80 flex flex-col gap-2">
-                <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold mb-2">⚡</div>
-                <h3 class="text-lg font-bold text-white">Instant Extraction</h3>
-                <p class="text-sm text-slate-400 leading-relaxed">Direct server integration ensures fast processing without queues or waiting lists.</p>
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-16">
+            <div class="glass p-5 sm:p-6 rounded-xl sm:rounded-2xl border border-slate-800/80 flex flex-col gap-2">
+                <div class="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold mb-1">⚡</div>
+                <h3 class="text-base sm:text-lg font-bold text-white">Instant M4A Extraction</h3>
+                <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">Direct server integration ensures fast processing into M4A format without queues.</p>
             </div>
-            <div class="glass p-6 rounded-2xl border border-slate-800/80 flex flex-col gap-2">
-                <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 font-bold mb-2">🎵</div>
-                <h3 class="text-lg font-bold text-white">Uncompromised Sound</h3>
-                <p class="text-sm text-slate-400 leading-relaxed">Extract original audio streams directly without quality degradation or clipping.</p>
+            <div class="glass p-5 sm:p-6 rounded-xl sm:rounded-2xl border border-slate-800/80 flex flex-col gap-2">
+                <div class="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 font-bold mb-1">🎵</div>
+                <h3 class="text-base sm:text-lg font-bold text-white">Native Audio Quality</h3>
+                <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">Extract original M4A streams directly without quality degradation or re-encoding loss.</p>
             </div>
-            <div class="glass p-6 rounded-2xl border border-slate-800/80 flex flex-col gap-2">
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold mb-2">🛡️</div>
-                <h3 class="text-lg font-bold text-white">Zero Intrusiion</h3>
-                <p class="text-sm text-slate-400 leading-relaxed">No software installations, registration forms, or pop-up redirects required.</p>
+            <div class="glass p-5 sm:p-6 rounded-xl sm:rounded-2xl border border-slate-800/80 flex flex-col gap-2">
+                <div class="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold mb-1">🛡️</div>
+                <h3 class="text-base sm:text-lg font-bold text-white">Zero Intrusion</h3>
+                <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">No software installations, registration forms, or pop-up redirects required.</p>
             </div>
         </section>
 
         <!-- How it works -->
-        <section class="glass p-8 rounded-2xl border border-slate-800/80">
-            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-indigo-500"></span> How to Convert
+        <section class="glass p-5 sm:p-8 rounded-xl sm:rounded-2xl border border-slate-800/80">
+            <h2 class="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-indigo-500 flex-shrink-0"></span> How to Get M4A Audio
             </h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-slate-400">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 text-xs sm:text-sm text-slate-400">
                 <div class="flex gap-3">
-                    <span class="font-extrabold text-indigo-400 text-base">01</span>
+                    <span class="font-extrabold text-indigo-400 text-sm sm:text-base flex-shrink-0">01</span>
                     <p>Copy the YouTube video link you want to convert from your browser or app.</p>
                 </div>
                 <div class="flex gap-3">
-                    <span class="font-extrabold text-indigo-400 text-base">02</span>
-                    <p>Paste the link into the field above and click <strong>Start Conversion</strong>.</p>
+                    <span class="font-extrabold text-indigo-400 text-sm sm:text-base flex-shrink-0">02</span>
+                    <p>Paste the link into the input field above and click <strong>Convert to M4A</strong>.</p>
                 </div>
                 <div class="flex gap-3">
-                    <span class="font-extrabold text-indigo-400 text-base">03</span>
-                    <p>Click <strong>Download Audio</strong> to save the high-quality file directly to your device.</p>
+                    <span class="font-extrabold text-indigo-400 text-sm sm:text-base flex-shrink-0">03</span>
+                    <p>Click <strong>Download M4A Audio</strong> to save the file directly to your device.</p>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="text-center py-8 text-slate-500 text-xs border-t border-slate-900 bg-slate-950/80">
+    <footer class="text-center py-6 sm:py-8 px-4 text-slate-500 text-xs border-t border-slate-900 bg-slate-950/80">
         <p>&copy; 2026 SonicGrab. All rights reserved. By using this service, you agree to our terms of use.</p>
     </footer>
 
@@ -186,7 +190,6 @@
                 const text = await navigator.clipboard.readText();
                 urlInput.value = text;
             } catch (err) {
-                // Clipboard permission fallback
                 urlInput.focus();
             }
         });
@@ -222,7 +225,7 @@
                     throw new Error(data.error || "Conversion failed on server");
                 }
                 
-                videoTitle.textContent = data.title || "Audio Download Ready";
+                videoTitle.textContent = data.title || "M4A Audio Download Ready";
                 downloadUrl = data.link;
                 
                 processingState.classList.add('hidden');
